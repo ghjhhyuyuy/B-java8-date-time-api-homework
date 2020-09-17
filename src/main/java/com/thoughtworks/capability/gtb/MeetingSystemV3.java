@@ -1,6 +1,6 @@
 package com.thoughtworks.capability.gtb;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -24,13 +24,13 @@ public class MeetingSystemV3 {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     // 从字符串解析得到会议时间
     LocalDateTime meetingTime = LocalDateTime.parse(timeStr, formatter);
-
+    meetingTime = meetingTime.plusHours(8);
     LocalDateTime now = LocalDateTime.now();
     if (now.isAfter(meetingTime)) {
-      LocalDateTime tomorrow = now.plusDays(1);
-      int newDayOfYear = tomorrow.getDayOfYear();
-      meetingTime = meetingTime.withDayOfYear(newDayOfYear);
-
+      Period period = Period.between(now.toLocalDate(), meetingTime.toLocalDate());
+      period = period.plusDays(1);
+      meetingTime = meetingTime.plusDays(period.getDays());
+      meetingTime = meetingTime.plusHours(-13);
       // 格式化新会议时间
       String showTimeStr = formatter.format(meetingTime);
       System.out.println(showTimeStr);
