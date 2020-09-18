@@ -24,13 +24,16 @@ public class MeetingSystemV3 {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     // 从字符串解析得到会议时间
     LocalDateTime meetingTime = LocalDateTime.parse(timeStr, formatter);
-    meetingTime = meetingTime.plusHours(8);
+    ZonedDateTime zonedDateTime = meetingTime.atZone(ZoneId.of("Europe/London"));
+    zonedDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault());
     LocalDateTime now = LocalDateTime.now();
-    if (now.isAfter(meetingTime)) {
-      Period period = Period.between(now.toLocalDate(), meetingTime.toLocalDate());
+    if (now.isAfter(zonedDateTime.toLocalDateTime())) {
+      Period period = Period.between(zonedDateTime.toLocalDate(), now.toLocalDate());
       period = period.plusDays(1);
+      zonedDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("America/Chicago"));
+      meetingTime = zonedDateTime.toLocalDateTime().plusYears(period.getYears());
+      meetingTime = meetingTime.plusMonths(period.getMonths());
       meetingTime = meetingTime.plusDays(period.getDays());
-      meetingTime = meetingTime.plusHours(-13);
       // 格式化新会议时间
       String showTimeStr = formatter.format(meetingTime);
       System.out.println(showTimeStr);

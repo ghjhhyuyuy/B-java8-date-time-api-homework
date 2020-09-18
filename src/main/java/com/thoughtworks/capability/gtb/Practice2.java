@@ -16,14 +16,12 @@ public class Practice2 {
 
   public static LocalDate getNextWorkDate(LocalDate date) {
     DayOfWeek dayOfWeek = date.getDayOfWeek();
-    String[] workDayIsNextDay = {"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","SUNDAY"};
-    List<String> dayString = Arrays.stream(workDayIsNextDay).filter(day -> day.equals(dayOfWeek.name())).collect(Collectors.toList());
-    if(dayString.size() != 0){
-      return date.plusDays(1);
-    }
     if(dayOfWeek.name().equals("FRIDAY")){
       return date.plusDays(3);
+    }else if(dayOfWeek.name().equals("SATURDAY")){
+      return date.plusWeeks(2);
+    }else {
+      return date.plusDays(1);
     }
-    return date.plusWeeks(2);
   }
 }
